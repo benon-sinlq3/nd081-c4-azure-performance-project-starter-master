@@ -44,9 +44,9 @@ exporter = metrics_exporter.new_metrics_exporter(
   connection_string=connectionString)
 view_manager.register_exporter(exporter)
 # Tracing
-
 tracer = Tracer(
-    exporter=exporter,
+    exporter=AzureExporter(
+        connection_string=connectionString),
     sampler=ProbabilitySampler(1.0),
 )
 app = Flask(__name__)
