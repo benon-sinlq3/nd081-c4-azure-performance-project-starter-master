@@ -44,8 +44,7 @@ exporter = metrics_exporter.new_metrics_exporter(
 # Tracing
 
 tracer = Tracer(
-    exporter=AzureExporter(
-        connection_string=connectionString),
+    exporter=exporter,
     sampler=ProbabilitySampler(1.0),
 )
 app = Flask(__name__)
@@ -54,7 +53,7 @@ app = Flask(__name__)
 
 middleware = FlaskMiddleware(
     app,
-    exporter=AzureExporter(connection_string=connectionString),
+    exporter=exporter,
     sampler=ProbabilitySampler(rate=1.0)
 )
 # Load configurations from environment or config file
