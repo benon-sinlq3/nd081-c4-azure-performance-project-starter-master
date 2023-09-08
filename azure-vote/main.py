@@ -26,7 +26,7 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 logger = logging.getLogger(__name__)
 # Metrics
 
-connectionString = 'InstrumentationKey=8463fd8b-0728-440e-9033-e14fb1d94911'
+connectionString = 'InstrumentationKey=c912ba5b-b6bb-4e0c-b076-a1ed56266f92'
 
 exporter = metrics_exporter.new_metrics_exporter(
   enable_standard_metrics=True,
