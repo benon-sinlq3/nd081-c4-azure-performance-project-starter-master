@@ -23,7 +23,8 @@ from opencensus.trace.samplers import ProbabilitySampler
 from opencensus.trace.tracer import Tracer
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 # Logging
-
+stats = stats_module.stats
+view_manager = stats.view_manager
 connectionString = 'InstrumentationKey=c912ba5b-b6bb-4e0c-b076-a1ed56266f92'
 # Metrics
 config_integration.trace_integrations(['logging'])
@@ -41,6 +42,7 @@ logger.setLevel(logging.INFO)
 exporter = metrics_exporter.new_metrics_exporter(
   enable_standard_metrics=True,
   connection_string=connectionString)
+view_manager.register_exporter(exporter)
 # Tracing
 
 tracer = Tracer(
@@ -52,9 +54,9 @@ app = Flask(__name__)
 # Requests
 
 middleware = FlaskMiddleware(
-    app,
+   app,
     exporter=exporter,
-    sampler=ProbabilitySampler(rate=1.0)
+    sampler=ProbabilitySampler(rate=1.0)    
 )
 # Load configurations from environment or config file
 app.config.from_pyfile('config_file.cfg')
