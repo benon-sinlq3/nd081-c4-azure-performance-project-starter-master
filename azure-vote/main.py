@@ -23,41 +23,15 @@ from opencensus.trace.samplers import ProbabilitySampler
 from opencensus.trace.tracer import Tracer
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 # Logging
-stats = stats_module.stats
-view_manager = stats.view_manager
-connectionString = 'InstrumentationKey=c912ba5b-b6bb-4e0c-b076-a1ed56266f92;IngestionEndpoint=https://eastus-8.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus.livediagnostics.monitor.azure.com/'
-# Metrics
-config_integration.trace_integrations(['logging'])
-config_integration.trace_integrations(['requests'])
-# Standard Logging
-logger = logging.getLogger(__name__)
-handler = AzureLogHandler(connection_string=connectionString)
-handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
-logger.addHandler(handler)
-# Logging custom Events 
-logger.addHandler(AzureEventHandler(connection_string=connectionString))
-# Set the logging level
-logger.setLevel(logging.INFO)
 
-exporter = metrics_exporter.new_metrics_exporter(
-  enable_standard_metrics=True,
-  connection_string=connectionString)
-view_manager.register_exporter(exporter)
-# Tracing
-tracer = Tracer(
-    exporter=AzureExporter(
-        connection_string=connectionString),
-    sampler=ProbabilitySampler(1.0),
-)
+connectionString = 'InstrumentationKey=c912ba5b-b6bb-4e0c-b076-a1ed56266f92;IngestionEndpoint=https://eastus-8.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus.livediagnostics.monitor.azure.com/'
+
+logger = logging.getLogger(__name__)
+logger.addHandler(AzureLogHandler(connectionString))
 app = Flask(__name__)
 
 # Requests
 
-middleware = FlaskMiddleware(
-   app,
-    exporter=exporter,
-    sampler=ProbabilitySampler(rate=1.0)    
-)
 # Load configurations from environment or config file
 app.config.from_pyfile('config_file.cfg')
 
@@ -95,13 +69,10 @@ def index():
         # Get current values
         vote1 = r.get(button1).decode('utf-8')
         # TODO: use tracer object to trace cat vote
-        with tracer.span(name="Cats Vote") as span:
-            print("Cats Vote")
-
+       
         vote2 = r.get(button2).decode('utf-8')
         # TODO: use tracer object to trace dog vote
-        with tracer.span(name="Dogs Vote") as span:
-            print("Dogs Vote")
+       
 
         # Return index with values
         return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
