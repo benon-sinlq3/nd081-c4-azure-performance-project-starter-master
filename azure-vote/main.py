@@ -27,7 +27,7 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 connectionString = 'InstrumentationKey=c912ba5b-b6bb-4e0c-b076-a1ed56266f92;IngestionEndpoint=https://eastus-8.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus.livediagnostics.monitor.azure.com/'
 
 logger = logging.getLogger(__name__)
-logger.addHandler(AzureLogHandler(connectionString))
+logger.addHandler(AzureLogHandler(connection_string=connectionString))
 app = Flask(__name__)
 
 # Requests
