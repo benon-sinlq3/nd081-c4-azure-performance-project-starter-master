@@ -25,7 +25,7 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 # Logging
 stats = stats_module.stats
 view_manager = stats.view_manager
-connectionString = 'InstrumentationKey=c912ba5b-b6bb-4e0c-b076-a1ed56266f92'
+connectionString = 'InstrumentationKey=c912ba5b-b6bb-4e0c-b076-a1ed56266f92;IngestionEndpoint=https://eastus-8.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus.livediagnostics.monitor.azure.com/'
 # Metrics
 config_integration.trace_integrations(['logging'])
 config_integration.trace_integrations(['requests'])
