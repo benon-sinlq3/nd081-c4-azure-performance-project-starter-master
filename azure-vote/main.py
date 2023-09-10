@@ -24,7 +24,7 @@ from opencensus.trace.tracer import Tracer
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 # Logging
 
-connectionString = 'InstrumentationKey=c912ba5b-b6bb-4e0c-b076-a1ed56266f92;IngestionEndpoint=https://eastus-8.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus.livediagnostics.monitor.azure.com/'
+connectionString = 'InstrumentationKey=ff6fd84f-2d4f-4df7-b2b4-d98bd12f6e2e;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/'
 
 logger = logging.getLogger(__name__)
 logger.addHandler(AzureLogHandler(connection_string=connectionString))
@@ -52,6 +52,18 @@ else:
 
 # Redis Connection
 r = redis.Redis()
+
+redis_server = os.environ['REDIS']
+try:
+   if "REDIS_PWD" in os.environ:
+      r = redis.StrictRedis(host=redis_server,
+                        port=6379,
+                        password=os.environ['REDIS_PWD'])
+   else:
+      r = redis.Redis(redis_server)
+   r.ping()
+except redis.ConnectionError:
+   exit('Failed to connect to Redis, terminating.')
 
 # Change title to host name to demo NLB
 if app.config['SHOWHOST'] == "true":
