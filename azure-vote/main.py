@@ -25,13 +25,39 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 # Logging
 
 connectionString = 'InstrumentationKey=edf7ead2-1fda-40d0-9e7e-b15abb6def62;IngestionEndpoint=https://eastus-8.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus.livediagnostics.monitor.azure.com/'
-
+stats = stats_module.stats
+view_manager = stats.view_manager
+config_integration.trace_integrations(['logging'])
+config_integration.trace_integrations(['requests'])
 logger = logging.getLogger(__name__)
-logger.addHandler(AzureLogHandler(connection_string=connectionString))
+handler = AzureLogHandler(connection_string=connectionString)
+handler.setFormatter(logging.Formatter('%(traceId)s %(spanId)s %(message)s'))
+logger.addHandler(handler)
+logger.addHandler(AzureEventHandler(connection_string=connectionString))
+logger.setLevel(logging.INFO)
+
+exporter = metrics_exporter.new_metrics_exporter(
+  enable_standard_metrics=True,
+  connection_string=connectionString)
+view_manager.register_exporter(exporter)
+
+tracer = Tracer(
+    exporter=AzureExporter(
+        connection_string=connectionString),
+    sampler=ProbabilitySampler(1.0),
+)
+
+
+
+
 app = Flask(__name__)
 
-logger.addHandler(AzureEventHandler(connection_string=connectionString))
 
+middleware = FlaskMiddleware(
+    app,
+    exporter=AzureExporter(connection_string=connectionString),
+    sampler=ProbabilitySampler(rate=1.0)
+)
 # Load configurations from environment or config file
 app.config.from_pyfile('config_file.cfg')
 
