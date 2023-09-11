@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 logger.addHandler(AzureLogHandler(connection_string=connectionString))
 app = Flask(__name__)
 
-logger.addHandler(AzureEventHandler(connectionString))
+logger.addHandler(AzureEventHandler(connection_string=connectionString))
 
 # Load configurations from environment or config file
 app.config.from_pyfile('config_file.cfg')
