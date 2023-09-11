@@ -24,7 +24,7 @@ from opencensus.trace.tracer import Tracer
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 # Logging
 
-connectionString = 'InstrumentationKey=ff6fd84f-2d4f-4df7-b2b4-d98bd12f6e2e;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/'
+connectionString = 'InstrumentationKey=edf7ead2-1fda-40d0-9e7e-b15abb6def62;IngestionEndpoint=https://eastus-8.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus.livediagnostics.monitor.azure.com/'
 
 logger = logging.getLogger(__name__)
 logger.addHandler(AzureLogHandler(connection_string=connectionString))
